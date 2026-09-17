@@ -1,0 +1,57 @@
+<div class="space-y-6 max-w-4xl">
+  
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Tags Management</h1>
+      <p class="text-xs text-slate-500 font-mono mt-0.5">Manage article keywords and tags</p>
+    </div>
+  </div>
+
+  <!-- Create Tag Form -->
+  <form action="/admin/tags" method="POST" class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row gap-4 items-end">
+    <div class="flex-1 w-full">
+      <label for="name" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Tag Name (English)</label>
+      <input type="text" id="name" name="name" required placeholder="e.g. Docker" class="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+    </div>
+    <div class="flex-1 w-full">
+      <label for="name_ar" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Tag Name (Arabic)</label>
+      <input type="text" id="name_ar" name="name_ar" dir="rtl" placeholder="e.g. دوكر" class="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none">
+    </div>
+    <div class="flex-1 w-full">
+      <label for="slug" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Slug</label>
+      <input type="text" id="slug" name="slug" required placeholder="e.g. docker" class="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+    </div>
+    <button type="submit" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow flex-shrink-0 cursor-pointer">
+      + Add Tag
+    </button>
+  </form>
+
+  <!-- Tags Table -->
+  <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+    <table class="w-full text-left text-xs">
+      <thead class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-500 uppercase tracking-wider font-mono">
+        <tr>
+          <th class="px-6 py-4">Name</th>
+          <th class="px-6 py-4">Arabic</th>
+          <th class="px-6 py-4">Slug</th>
+          <th class="px-6 py-4 text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+        <% tags.forEach(tag => { %>
+          <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+            <td class="px-6 py-3 font-mono font-bold text-slate-900 dark:text-white">#<%= tag.name %></td>
+            <td class="px-6 py-3" dir="rtl"><%= tag.name_ar %></td>
+            <td class="px-6 py-3 text-slate-400 font-mono"><%= tag.slug %></td>
+            <td class="px-6 py-3 text-right">
+              <form action="/admin/tags/<%= tag.id %>/delete" method="POST" class="inline" onsubmit="return confirm('Delete tag #<%= tag.name %>?');">
+                <button type="submit" class="text-rose-600 hover:text-rose-800 font-semibold cursor-pointer">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+</div>

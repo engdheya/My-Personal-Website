@@ -1,0 +1,135 @@
+module.exports = {
+  // Navigation
+  nav_home: 'الرئيسية',
+  nav_about: 'عن المطور',
+  nav_projects: 'المشاريع',
+  nav_blog: 'المدونة',
+  nav_services: 'الخدمات',
+  nav_contact: 'تواصل معي',
+  nav_admin: 'لوحة التحكم',
+
+  // Hero
+  hero_greeting: 'مرحباً، أنا',
+  hero_name: 'ضياء عباس',
+  hero_title: 'مهندس ومطور برمجيات',
+  hero_subtitle: 'Build. Learn. Share. Software Engineering & Technology',
+  hero_description: 'مطور برمجيات شغوف ببناء تطبيقات الويب والموبايل وحلول البرمجيات عالية الكفاءة باستخدام تقنيات حديثة ومعايير هندسية متقدمة.',
+  hero_btn_projects: 'عرض المشاريع',
+  hero_btn_blog: 'قراءة المدونة',
+  hero_btn_contact: 'تواصل معي',
+  hero_btn_cv: 'تحميل السيرة الذاتية',
+
+  // Skills
+  skills_title: 'المهارات والتقنيات',
+  skills_subtitle: 'الأدوات ولغات البرمجة وأطر العمل التي أعتمد عليها لتحويل الأفكار إلى واقع برمجي',
+  skills_backend: 'تطوير الواجهات الخلفية (Backend)',
+  skills_mobile: 'تطوير تطبيقات الموبايل',
+  skills_database: 'قواعد البيانات والتخزين',
+  skills_tools: 'الأدوات وبيئة العمل',
+
+  // About Preview & Page
+  about_title: 'نبذة عن المطور',
+  about_subtitle: 'مهندس برمجيات متخصص في بناء حلول برمجية نظيفة، فعالة، وقابلة للتوسع',
+  about_read_more: 'قراءة المزيد عني',
+  about_experience: 'الخبرات المهنية',
+  about_education: 'التعليم والشهادات',
+  about_connect: 'تواصل وتابع أعمالي',
+  about_full_title: 'مهندس برمجيات، شغوف بحل المشكلات والتعلم المستمر',
+
+  // Featured Projects
+  featured_projects_title: 'أهم المشاريع',
+  featured_projects_subtitle: 'نماذج مختارة من التطبيقات والحلول البرمجية والمعماريات التي قمت ببنائها',
+  view_all_projects: 'استعراض كافة المشاريع',
+  project_tech: 'التقنيات المستخدمة',
+  project_github: 'كود GitHub',
+  project_live_demo: 'معاينة حية',
+  project_problem: 'المشكلة والتحدي',
+  project_solution: 'الحل البرمجي',
+  project_key_features: 'أهم الخصائص',
+  project_related: 'مشاريع ذات صلة',
+  project_status_completed: 'مكتمل',
+  project_status_in_progress: 'قيد التطوير',
+  project_status_archived: 'مؤرشف',
+  project_filter_all: 'كافة المشاريع',
+
+  // Blog
+  latest_articles_title: 'آخر المقالات التقنية',
+  latest_articles_subtitle: 'شروحات تطبيقية، حلول مشاكل شائعة، وأدلة معمارية لمهندسي البرمجيات',
+  all_articles_title: 'المدونة التقنية',
+  all_articles_subtitle: 'مقالات وشروحات تقنية مبنية على المشاكل والمشاريع الحقيقية',
+  blog_read_article: 'اقرأ المقال',
+  blog_reading_time: 'دقيقة قراءة',
+  blog_published_on: 'نُشر بتاريخ',
+  blog_updated_on: 'آخر تحديث',
+  blog_author: 'الكاتب',
+  blog_toc: 'فهرس المحتويات',
+  blog_share: 'مشاركة المقال',
+  blog_related: 'مقالات ذات صلة',
+  blog_about_author: 'عن الكاتب',
+  blog_search_placeholder: 'ابحث في المقالات التقنية...',
+  blog_categories: 'التصنيفات',
+  blog_tags: 'الوسوم',
+  blog_popular: 'المقالات الشائعة',
+  blog_no_articles: 'لم يتم نشر مقالات حتى الآن.',
+  blog_prev: 'السابق',
+  blog_next: 'التالي',
+  blog_page: 'صفحة',
+
+  // Services
+  services_title: 'الخدمات البرمجية',
+  services_subtitle: 'حلول برمجية متقدمة ومبنية بدقة لتناسب احتياجات مشاريعك وتطلعاتك',
+  services_request: 'طلب استشارة أو خدمة',
+  services_features: 'أهم مميزات الخدمة',
+
+  // Contact
+  contact_title: 'تواصل معي',
+  contact_subtitle: 'هل لديك مشروع، استفسار تقني، أو رغبة في التعاون البرمجي؟ لا تتردد في مراسلتي.',
+  contact_name: 'الاسم الكامل',
+  contact_email: 'البريد الإلكتروني',
+  contact_subject: 'موضوع الرسالة',
+  contact_message: 'نص الرسالة',
+  contact_submit: 'إرسال الرسالة',
+  contact_sending: 'جاري الإرسال...',
+  contact_success: 'تم إرسال رسالتك بنجاح! سأقوم بالرد عليك في أقرب وقت ممكن.',
+  contact_info: 'معلومات التواصل',
+  contact_email_direct: 'البريد المباشر',
+  contact_telegram_direct: 'تيليجرام',
+  contact_location: 'موقع العمل',
+  contact_location_val: 'العمل عن بعد / كافة أنحاء العالم',
+
+  // Search
+  search_title: 'نتائج البحث',
+  search_placeholder: 'ابحث عن مقالات، مشاريع، تقنيات...',
+  search_query_prefix: 'نتائج البحث عن',
+  search_no_results: 'لم يتم العثور على نتائج مطابقة لكلمات البحث. جرب كلمات أخرى.',
+  search_found_articles: 'المقالات المطابقة',
+  search_found_projects: 'المشاريع المطابقة',
+
+  // Legal
+  privacy_title: 'سياسة الخصوصية',
+  terms_title: 'الشروط والأحكام',
+
+  // Error Pages
+  error_404_title: '404 - الصفحة غير موجودة',
+  error_404_desc: 'عذراً، الصفحة التي تبحث عنها غير موجودة أو ربما تم تغيير مسارها.',
+  error_403_title: '403 - غير مصرح بالدخول',
+  error_403_desc: 'ليس لديك الصلاحية الكافية للوصول إلى هذا القسم.',
+  error_500_title: '500 - خطأ في الخادم',
+  error_500_desc: 'حدث خطأ غير متوقع في الخادم، يرجى المحاولة مرة أخرى لاحقاً.',
+  error_back_home: 'العودة للرئيسية',
+
+  // Footer
+  footer_bio: 'المنصة الشخصية والمدونة التقنية للمهندس ضياء عباس. بناء وتطوير حلول البرمجيات ومشاركة المعرفة التقنية.',
+  footer_quick_links: 'روابط سريعة',
+  footer_social: 'تواصل اجتماعي',
+  footer_legal: 'قانوني',
+  footer_rights: 'جميع الحقوق محفوظة.',
+
+  // Common UI
+  theme_dark: 'الوضع الداكن',
+  theme_light: 'الوضع الفاتح',
+  lang_switch: 'English',
+  copy_code: 'نسخ',
+  copied: 'تم النسخ!',
+  view_details: 'التفاصيل',
+};

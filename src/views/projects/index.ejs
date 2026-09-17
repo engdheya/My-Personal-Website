@@ -1,0 +1,95 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <%- include('../partials/breadcrumbs') %>
+
+  <!-- Header -->
+  <div class="max-w-3xl mb-10">
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+      <%= t.nav_projects %>
+    </h1>
+    <p class="mt-3 text-base text-slate-600 dark:text-slate-400">
+      <%= t.featured_projects_subtitle %>
+    </p>
+  </div>
+
+  <!-- Tech Filter Badges -->
+  <div class="flex flex-wrap items-center gap-2 mb-10 pb-4 border-b border-slate-200 dark:border-slate-800">
+    <a href="/projects<%= currentLang === 'en' ? '?lang=en' : '' %>" class="px-4 py-2 rounded-xl text-xs font-bold transition-all <%= !selectedFilter ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700' %>">
+      <%= t.project_filter_all %>
+    </a>
+    <% ['Laravel', 'Flutter', 'PHP', 'MySQL', 'REST API'].forEach(filter => { %>
+      <a href="/projects?tech=<%= encodeURIComponent(filter) %><%= currentLang === 'en' ? '&lang=en' : '' %>" class="px-4 py-2 rounded-xl text-xs font-bold transition-all <%= selectedFilter === filter ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700' %>">
+        <%= filter %>
+      </a>
+    <% }) %>
+  </div>
+
+  <!-- Projects Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <% projects.forEach(project => { %>
+      <article class="group rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+        <!-- Thumbnail -->
+        <a href="/projects/<%= project.slug %><%= currentLang === 'en' ? '?lang=en' : '' %>" class="block aspect-video overflow-hidden bg-slate-100 dark:bg-slate-800 relative">
+          <img 
+            src="<%= project.main_image || '/images/projects/smart-store-main.jpg' %>" 
+            alt="<%= project.title %>" 
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
+          <span class="absolute top-3 end-3 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider backdrop-blur-md <%= project.status === 'Completed' ? 'bg-emerald-500/90 text-white' : 'bg-amber-500/90 text-white' %>">
+            <%= project.status === 'Completed' ? t.project_status_completed : t.project_status_in_progress %>
+          </span>
+        </a>
+
+        <!-- Content -->
+        <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 mb-2 font-mono">
+              <span><%= project.category || 'Software' %></span>
+              <span>•</span>
+              <span><%= project.project_date || '2026' %></span>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-1">
+              <a href="/projects/<%= project.slug %><%= currentLang === 'en' ? '?lang=en' : '' %>">
+                <%= currentLang === 'ar' ? (project.title_ar || project.title) : project.title %>
+              </a>
+            </h2>
+            <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed">
+              <%= currentLang === 'ar' ? (project.short_description_ar || project.short_description) : project.short_description %>
+            </p>
+          </div>
+
+          <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
+            <!-- Tech badges -->
+            <div class="flex flex-wrap gap-1.5 text-[11px] font-mono">
+              <% (project.technologies || '').split(',').forEach(tech => { %>
+                <span class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                  <%= tech.trim() %>
+                </span>
+              <% }) %>
+            </div>
+
+            <!-- Links -->
+            <div class="flex items-center justify-between pt-1 text-xs font-semibold">
+              <a href="/projects/<%= project.slug %><%= currentLang === 'en' ? '?lang=en' : '' %>" class="text-blue-600 dark:text-blue-400 hover:underline">
+                <%= t.view_details %> →
+              </a>
+              <div class="flex items-center gap-3">
+                <% if (project.github_url) { %>
+                <a href="<%= project.github_url %>" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-slate-900 dark:hover:text-white" title="GitHub">
+                  <%= t.project_github %> ↗
+                </a>
+                <% } %>
+                <% if (project.live_url) { %>
+                <a href="<%= project.live_url %>" target="_blank" rel="noopener noreferrer" class="text-emerald-600 dark:text-emerald-400 hover:underline" title="Live Demo">
+                  <%= t.project_live_demo %> ↗
+                </a>
+                <% } %>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </article>
+    <% }) %>
+  </div>
+</div>
