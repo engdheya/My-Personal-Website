@@ -30,6 +30,8 @@ yarn-error.log
 !/storage/logs/.gitignore
 /bootstrap/cache/*
 !/bootstrap/cache/.gitignore
+!/bootstrap/cache/filament/
+!/bootstrap/cache/filament/.gitignore
 /public/storage
 /public/hot
 /public/uploads/*
