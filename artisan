@@ -1,0 +1,27 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Console\Input\ArgvInput;
+
+define('LARAVEL_START', microtime(true));
+
+// Register the Composer autoloader...
+if (file_exists(__DIR__.'/vendor/autoload.php')) {
+    require __DIR__.'/vendor/autoload.php';
+}
+
+// Bootstrap Laravel and handle the command...
+if (file_exists(__DIR__.'/bootstrap/app.php')) {
+    $app = require_once __DIR__.'/bootstrap/app.php';
+    if ($app instanceof Illuminate\Contracts\Console\Kernel) {
+        $status = $app->handle(
+            $input = new ArgvInput,
+            new Symfony\Component\Console\Output\ConsoleOutput
+        );
+        $app->terminate($input, $status);
+        exit($status);
+    }
+}
+
+echo "Artisan CLI requires Composer dependencies to be installed.\n";
+echo "Run 'composer install' to bootstrap the PHP runtime.\n";

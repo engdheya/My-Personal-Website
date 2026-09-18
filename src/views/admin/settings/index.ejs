@@ -1,0 +1,188 @@
+<div class="max-w-4xl mx-auto space-y-8">
+  
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Site & SEO Settings</h1>
+    <p class="text-xs text-slate-500 font-mono mt-0.5">Control global branding, profile details, social links, and Google integrations</p>
+  </div>
+
+  <form action="/admin/settings" method="POST" class="space-y-8">
+    
+    <!-- Branding & Identity -->
+    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+      <h2 class="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
+        <span>🏛️</span>
+        <span>General Branding</span>
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label for="site_name" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Site Name</label>
+          <input type="text" id="site_name" name="site_name" value="<%= settings.site_name || 'DheyaDev' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="site_tagline" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Site Tagline</label>
+          <input type="text" id="site_tagline" name="site_tagline" value="<%= settings.site_tagline || 'Software Engineer & Developer' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+      </div>
+
+      <div>
+        <label for="site_description" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Site Description (English)</label>
+        <textarea id="site_description" name="site_description" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"><%= settings.site_description || '' %></textarea>
+      </div>
+
+      <div>
+        <label for="site_description_ar" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Site Description (Arabic)</label>
+        <textarea id="site_description_ar" name="site_description_ar" dir="rtl" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"><%= settings.site_description_ar || '' %></textarea>
+      </div>
+    </div>
+
+    <!-- Author Profile -->
+    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+      <h2 class="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
+        <span>👤</span>
+        <span>Author Profile Information</span>
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label for="author_name" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Author Name (English)</label>
+          <input type="text" id="author_name" name="author_name" value="<%= settings.author_name || 'Dheya Abbas' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="author_name_ar" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Author Name (Arabic)</label>
+          <input type="text" id="author_name_ar" name="author_name_ar" dir="rtl" value="<%= settings.author_name_ar || 'ضياء عباس' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label for="author_title" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Author Title (English)</label>
+          <input type="text" id="author_title" name="author_title" value="<%= settings.author_title || 'Software Engineer & Developer' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="author_title_ar" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Author Title (Arabic)</label>
+          <input type="text" id="author_title_ar" name="author_title_ar" dir="rtl" value="<%= settings.author_title_ar || 'مهندس ومطور برمجيات' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label for="profile_image" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Profile Image URL</label>
+          <input type="text" id="profile_image" name="profile_image" value="<%= settings.profile_image || '/images/dheya-profile.jpg' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="cv_url" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">CV PDF URL</label>
+          <input type="text" id="cv_url" name="cv_url" value="<%= settings.cv_url || '/uploads/Dheya-Abbas-CV.pdf' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+      </div>
+
+      <div>
+        <label for="author_bio" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Author Bio (English)</label>
+        <textarea id="author_bio" name="author_bio" rows="3" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"><%= settings.author_bio || '' %></textarea>
+      </div>
+
+      <div>
+        <label for="author_bio_ar" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Author Bio (Arabic)</label>
+        <textarea id="author_bio_ar" name="author_bio_ar" dir="rtl" rows="3" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"><%= settings.author_bio_ar || '' %></textarea>
+      </div>
+    </div>
+
+    <!-- Social Links (Requirement 23) -->
+    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+      <h2 class="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
+        <span>🔗</span>
+        <span>Social Media Links</span>
+      </h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label for="github" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">GitHub Profile</label>
+          <input type="url" id="github" name="github" value="<%= settings.github || 'https://github.com/engdheya' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="telegram" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Telegram Profile</label>
+          <input type="url" id="telegram" name="telegram" value="<%= settings.telegram || 'https://t.me/engdheya' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="linkedin" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">LinkedIn Profile</label>
+          <input type="url" id="linkedin" name="linkedin" value="<%= settings.linkedin || 'https://linkedin.com/in/engdheya' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="email" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Contact Email</label>
+          <input type="email" id="email" name="email" value="<%= settings.email || 'hello@dheyadev.com' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+      </div>
+    </div>
+
+    <!-- SEO Defaults & Search Console (Requirement 31, 32, 61, 62) -->
+    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+      <h2 class="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
+        <span>🔎</span>
+        <span>Default SEO & Search Console</span>
+      </h2>
+
+      <div>
+        <label for="default_seo_title" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Default Title Tag</label>
+        <input type="text" id="default_seo_title" name="default_seo_title" value="<%= settings.default_seo_title || '' %>" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      </div>
+
+      <div>
+        <label for="default_meta_description" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Default Meta Description</label>
+        <textarea id="default_meta_description" name="default_meta_description" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"><%= settings.default_meta_description || '' %></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label for="google_search_console_tag" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Google Search Console Verification Token</label>
+          <input type="text" id="google_search_console_tag" name="google_search_console_tag" value="<%= settings.google_search_console_tag || '' %>" placeholder="e.g. google-site-verification=abc..." class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label for="google_analytics_id" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Google Analytics GA4 Measurement ID</label>
+          <input type="text" id="google_analytics_id" name="google_analytics_id" value="<%= settings.google_analytics_id || '' %>" placeholder="G-XXXXXXXXXX" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none">
+        </div>
+      </div>
+    </div>
+
+    <!-- AdSense Settings (Requirement 46) -->
+    <div class="p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+      <h2 class="text-base font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center gap-2">
+        <span>📢</span>
+        <span>Google AdSense Slot Configuration</span>
+      </h2>
+
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="adsense_enabled" name="adsense_enabled" value="1" <%= settings.adsense_enabled === '1' ? 'checked' : '' %> class="w-4 h-4 rounded text-blue-600">
+        <label for="adsense_enabled" class="text-xs font-bold text-slate-700 dark:text-slate-300">Enable Google AdSense Slots Globally</label>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div>
+          <label for="top_ad_code" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">Top Banner Ad HTML / Script</label>
+          <textarea id="top_ad_code" name="top_ad_code" rows="3" class="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"><%= settings.top_ad_code || '' %></textarea>
+        </div>
+
+        <div>
+          <label for="article_ad_code" class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2">In-Article Ad HTML / Script</label>
+          <textarea id="article_ad_code" name="article_ad_code" rows="3" class="w-full px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"><%= settings.article_ad_code || '' %></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="flex items-center justify-end gap-3">
+      <button type="submit" class="px-8 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-lg transition-colors cursor-pointer">
+        Save All Settings
+      </button>
+    </div>
+
+  </form>
+
+</div>

@@ -1,0 +1,140 @@
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <%- include('../partials/breadcrumbs') %>
+
+  <!-- Article Header -->
+  <header class="mb-10 space-y-4">
+    <div class="flex flex-wrap items-center gap-3">
+      <a href="/blog?category=<%= post.category_slug %><%= currentLang === 'en' ? '&lang=en' : '' %>" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 hover:bg-blue-200 transition-colors">
+        <%= currentLang === 'ar' ? (post.category_name_ar || post.category_name) : post.category_name %>
+      </a>
+      <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">
+        <%= t.blog_published_on %>: <%= new Date(post.published_at).toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+      </span>
+      <% if (post.updated_at && post.updated_at !== post.published_at) { %>
+      <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">
+        • <%= t.blog_updated_on %>: <%= new Date(post.updated_at).toLocaleDateString(currentLang === 'ar' ? 'ar-EG' : 'en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %>
+      </span>
+      <% } %>
+      <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">
+        • <%= post.reading_time || 5 %> <%= t.blog_reading_time %>
+      </span>
+    </div>
+
+    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+      <%= currentLang === 'ar' ? (post.title_ar || post.title) : post.title %>
+    </h1>
+
+    <p class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+      <%= currentLang === 'ar' ? (post.excerpt_ar || post.excerpt) : post.excerpt %>
+    </p>
+
+    <!-- Author & Social Share Bar -->
+    <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <img src="<%= settings.profile_image || '/images/dheya-avatar.jpg' %>" alt="<%= settings.author_name %>" class="w-10 h-10 rounded-full object-cover border border-slate-300 dark:border-slate-700">
+        <div class="text-xs">
+          <div class="font-bold text-slate-900 dark:text-white">
+            <%= currentLang === 'ar' ? (settings.author_name_ar || 'ضياء عباس') : (settings.author_name || 'Dheya Abbas') %>
+          </div>
+          <div class="text-slate-500"><%= currentLang === 'ar' ? (settings.author_title_ar || 'مهندس برمجيات') : (settings.author_title || 'Software Engineer') %></div>
+        </div>
+      </div>
+
+      <!-- Social Share Buttons -->
+      <div class="flex items-center gap-2 text-xs font-semibold">
+        <span class="text-slate-400"><%= t.blog_share %>:</span>
+        <% const shareUrl = encodeURIComponent('https://dheyadev.com/blog/' + post.slug); %>
+        <% const shareTitle = encodeURIComponent(post.title); %>
+        <a href="https://twitter.com/intent/tweet?text=<%= shareTitle %>&url=<%= shareUrl %>" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950 text-slate-600 dark:text-slate-300 hover:text-sky-500 transition-colors" title="Share on X">
+          𝕏
+        </a>
+        <a href="https://t.me/share/url?url=<%= shareUrl %>&text=<%= shareTitle %>" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-sky-50 dark:hover:bg-sky-950 text-slate-600 dark:text-slate-300 hover:text-sky-500 transition-colors" title="Share on Telegram">
+          ✈️
+        </a>
+        <a href="https://api.whatsapp.com/send?text=<%= shareTitle %>%20<%= shareUrl %>" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950 text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors" title="Share on WhatsApp">
+          💬
+        </a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=<%= shareUrl %>" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950 text-slate-600 dark:text-slate-300 hover:text-blue-500 transition-colors" title="Share on LinkedIn">
+          in
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Featured Image -->
+  <div class="rounded-3xl overflow-hidden shadow-2xl bg-slate-900 border border-slate-200 dark:border-slate-800 mb-12 aspect-video">
+    <img 
+      src="<%= post.featured_image || '/images/posts/laravel-mysql-driver.jpg' %>" 
+      alt="<%= post.alt_text || post.title %>" 
+      class="w-full h-full object-cover"
+      loading="eager"
+    />
+  </div>
+
+  <!-- Table of Contents (Requirement 18) -->
+  <% if (toc && toc.length > 0) { %>
+    <nav class="my-8 p-6 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm" aria-label="Table of Contents">
+      <div class="flex items-center gap-2 mb-4 text-slate-900 dark:text-white font-bold text-base">
+        <span>📑</span>
+        <span><%= t.blog_toc %></span>
+      </div>
+      <ol class="space-y-2 text-sm">
+        <% toc.forEach(item => { %>
+          <li class="<%= item.level === 3 ? 'ps-6 text-xs' : 'font-semibold' %>">
+            <a href="#<%= item.id %>" class="text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors hover:underline">
+              <%= item.text %>
+            </a>
+          </li>
+        <% }) %>
+      </ol>
+    </nav>
+  <% } %>
+
+  <!-- Article In-Content Ad -->
+  <%- include('../partials/ads', { position: 'article' }) %>
+
+  <!-- Rendered Content with Syntax Highlighting & Copy (Requirement 16, 17, 44) -->
+  <div class="prose dark:prose-invert max-w-none text-slate-800 dark:text-slate-200 leading-relaxed text-base">
+    <%- contentHtml %>
+  </div>
+
+  <!-- Tags Bar -->
+  <% if (postTags && postTags.length > 0) { %>
+    <div class="my-8 pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-2">
+      <span class="text-xs text-slate-400 font-mono"><%= t.blog_tags %>:</span>
+      <% postTags.forEach(tag => { %>
+        <a href="/search?q=<%= encodeURIComponent(tag.name) %><%= currentLang === 'en' ? '&lang=en' : '' %>" class="px-3 py-1 rounded-lg text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-blue-600 hover:text-white transition-colors">
+          #<%= tag.name %>
+        </a>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <!-- Author Box (Requirement 65) -->
+  <%- include('../partials/author-box') %>
+
+  <!-- Related Articles (Requirement 19) -->
+  <% if (relatedPosts && relatedPosts.length > 0) { %>
+    <div class="pt-12 border-t border-slate-200 dark:border-slate-800">
+      <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-8">
+        <%= t.blog_related %>
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <% relatedPosts.forEach(rel => { %>
+          <article class="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center gap-4 hover:border-blue-500 transition-colors">
+            <img src="<%= rel.featured_image %>" alt="<%= rel.title %>" class="w-20 h-20 rounded-xl object-cover bg-slate-800 flex-shrink-0">
+            <div>
+              <span class="text-[11px] font-mono text-blue-600 dark:text-blue-400 font-semibold"><%= rel.category_name %></span>
+              <h4 class="font-bold text-sm text-slate-900 dark:text-white line-clamp-2 mt-1">
+                <a href="/blog/<%= rel.slug %><%= currentLang === 'en' ? '?lang=en' : '' %>" class="hover:underline">
+                  <%= currentLang === 'ar' ? (rel.title_ar || rel.title) : rel.title %>
+                </a>
+              </h4>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    </div>
+  <% } %>
+
+</div>

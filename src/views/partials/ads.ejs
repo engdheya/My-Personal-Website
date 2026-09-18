@@ -1,0 +1,23 @@
+<% if (settings.adsense_enabled === '1') { %>
+  <% if (typeof position !== 'undefined' && position === 'top' && settings.top_ad_code) { %>
+    <div class="my-6 text-center overflow-hidden max-w-full">
+      <div class="text-[10px] uppercase tracking-wider text-slate-400 mb-1">Sponsored</div>
+      <%- settings.top_ad_code %>
+    </div>
+  <% } else if (typeof position !== 'undefined' && position === 'article' && settings.article_ad_code) { %>
+    <div class="my-8 text-center overflow-hidden max-w-full border-y border-slate-200 dark:border-slate-800 py-4">
+      <div class="text-[10px] uppercase tracking-wider text-slate-400 mb-1">Sponsored</div>
+      <%- settings.article_ad_code %>
+    </div>
+  <% } else if (typeof position !== 'undefined' && position === 'sidebar' && settings.sidebar_ad_code) { %>
+    <div class="my-6 text-center overflow-hidden max-w-full rounded-xl bg-slate-100 dark:bg-slate-800/40 p-3">
+      <div class="text-[10px] uppercase tracking-wider text-slate-400 mb-1">Sponsored</div>
+      <%- settings.sidebar_ad_code %>
+    </div>
+  <% } else if (typeof position !== 'undefined' && position === 'footer' && settings.footer_ad_code) { %>
+    <div class="my-8 text-center overflow-hidden max-w-full">
+      <div class="text-[10px] uppercase tracking-wider text-slate-400 mb-1">Sponsored</div>
+      <%- settings.footer_ad_code %>
+    </div>
+  <% } %>
+<% } %>

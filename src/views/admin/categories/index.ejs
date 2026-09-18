@@ -1,0 +1,45 @@
+<div class="space-y-6">
+  
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Categories</h1>
+      <p class="text-xs text-slate-500 font-mono mt-0.5">Organize blog articles into topics</p>
+    </div>
+    <a href="/admin/categories/new" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow transition-colors flex items-center gap-1.5">
+      <span>+</span>
+      <span>New Category</span>
+    </a>
+  </div>
+
+  <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+    <table class="w-full text-left text-xs">
+      <thead class="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 text-slate-500 uppercase tracking-wider font-mono">
+        <tr>
+          <th class="px-6 py-4">Name</th>
+          <th class="px-6 py-4">Arabic Name</th>
+          <th class="px-6 py-4">Slug</th>
+          <th class="px-6 py-4">Articles Count</th>
+          <th class="px-6 py-4 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+        <% categories.forEach(cat => { %>
+          <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors">
+            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white text-sm"><%= cat.name %></td>
+            <td class="px-6 py-4 text-slate-700 dark:text-slate-300 font-medium" dir="rtl"><%= cat.name_ar %></td>
+            <td class="px-6 py-4 font-mono text-slate-400">/blog?category=<%= cat.slug %></td>
+            <td class="px-6 py-4 font-mono text-blue-600 font-bold"><%= cat.posts_count || 0 %></td>
+            <td class="px-6 py-4 text-right space-x-2">
+              <a href="/admin/categories/<%= cat.id %>/edit" class="text-blue-600 hover:text-blue-800 dark:hover:text-blue-400 font-semibold">Edit</a>
+              <span class="text-slate-300">|</span>
+              <form action="/admin/categories/<%= cat.id %>/delete" method="POST" class="inline" onsubmit="return confirm('Delete this category?');">
+                <button type="submit" class="text-rose-600 hover:text-rose-800 dark:hover:text-rose-400 font-semibold cursor-pointer">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+</div>
