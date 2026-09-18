@@ -9,22 +9,49 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
+        $tech = $request->query('tech');
+        $selectedFilter = is_string($tech) && $tech !== '' ? $tech : null;
+
         $query = Project::query();
 
-        if ($request->has('tech')) {
-            $query->where('technologies', 'like', "%{$request->tech}%");
+        if ($selectedFilter) {
+            $query->where('technologies', 'like', '%'.$selectedFilter.'%');
         }
 
-        $projects = $query->orderBy('is_featured', 'desc')->latest()->get();
+        $projects = $query
+            ->orderByDesc('is_featured')
+            ->latest('id')
+            ->get();
 
-        return view('projects.index', compact('projects'));
+        $breadcrumbs = [
+            ['name' => __('site.nav_projects'), 'url' => '/projects'],
+        ];
+
+        return view('projects.index', [
+            'projects' => $projects,
+            'selectedFilter' => $selectedFilter,
+            'breadcrumbs' => $breadcrumbs,
+        ]);
     }
 
     public function show(string $slug)
     {
         $project = Project::where('slug', $slug)->firstOrFail();
-        $relatedProjects = Project::where('id', '!=', $project->id)->take(2)->get();
 
-        return view('projects.show', compact('project', 'relatedProjects'));
+        $relatedProjects = Project::whereKeyNot($project->getKey())
+            ->latest('id')
+            ->take(2)
+            ->get();
+
+        $breadcrumbs = [
+            ['name' => __('site.nav_projects'), 'url' => '/projects'],
+            ['name' => loc_field($project, 'title'), 'url' => '/projects/'.$project->slug],
+        ];
+
+        return view('projects.show', [
+            'project' => $project,
+            'relatedProjects' => $relatedProjects,
+            'breadcrumbs' => $breadcrumbs,
+        ]);
     }
 }

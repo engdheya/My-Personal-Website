@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
@@ -11,35 +11,100 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Post::published()->with(['category', 'tags']);
+        $categorySlug = $request->query('category');
+        $currentCategory = null;
 
-        if ($request->has('category')) {
-            $category = Category::where('slug', $request->category)->firstOrFail();
-            $query->where('category_id', $category->id);
+        $query = Post::published()->with('category')->latest('published_at');
+
+        if (is_string($categorySlug) && $categorySlug !== '') {
+            $currentCategory = Category::where('slug', $categorySlug)->first();
+
+            if ($currentCategory) {
+                $query->where('category_id', $currentCategory->id);
+            } else {
+                $categorySlug = null;
+            }
         }
 
-        $posts = $query->latest('published_at')->paginate(12);
-        $categories = Category::withCount(['posts' => fn($q) => $q->published()])->get();
-        $tags = Tag::all();
+        // 12 articles per page (matches the SSR engine).
+        $posts = $query->paginate(12)->withQueryString();
 
-        return view('blog.index', compact('posts', 'categories', 'tags'));
+        $categories = Category::query()
+            ->withCount(['posts' => fn ($builder) => $builder->published()])
+            ->orderBy('name')
+            ->get();
+
+        $tags = Tag::orderBy('name')->get();
+
+        $breadcrumbs = [
+            ['name' => __('site.nav_blog'), 'url' => '/blog'],
+        ];
+
+        if ($currentCategory) {
+            $breadcrumbs[] = [
+                'name' => loc_field($currentCategory, 'name'),
+                'url' => '/blog?category='.$currentCategory->slug,
+            ];
+        }
+
+        return view('blog.index', [
+            'posts' => $posts,
+            'categories' => $categories,
+            'tags' => $tags,
+            'currentCategory' => $currentCategory,
+            'selectedCategorySlug' => $categorySlug,
+            'breadcrumbs' => $breadcrumbs,
+        ]);
     }
 
     public function show(string $slug)
     {
-        $post = Post::where('slug', $slug)
-            ->when(!auth()->check(), fn($q) => $q->published())
-            ->with(['category', 'tags', 'user'])
+        $post = Post::with(['category', 'tags', 'user'])
+            ->where('slug', $slug)
             ->firstOrFail();
+
+        // Drafts & scheduled posts are only previewable by a signed-in admin.
+        if (! $post->isPublished() && ! auth()->check()) {
+            abort(404);
+        }
 
         $post->increment('views_count');
 
+        $body = post_body($post);
+        $contentHtml = markdown_html($body);
+        $toc = markdown_toc($body);
+
         $relatedPosts = Post::published()
+            ->with('category')
             ->where('category_id', $post->category_id)
-            ->where('id', '!=', $post->id)
+            ->whereKeyNot($post->getKey())
+            ->latest('published_at')
             ->take(2)
             ->get();
 
-        return view('blog.show', compact('post', 'relatedPosts'));
+        $breadcrumbs = [
+            ['name' => __('site.nav_blog'), 'url' => '/blog'],
+        ];
+
+        if ($post->category) {
+            $breadcrumbs[] = [
+                'name' => loc_field($post->category, 'name'),
+                'url' => '/blog?category='.$post->category->slug,
+            ];
+        }
+
+        $breadcrumbs[] = [
+            'name' => loc_field($post, 'title'),
+            'url' => '/blog/'.$post->slug,
+        ];
+
+        return view('blog.show', [
+            'post' => $post,
+            'contentHtml' => $contentHtml,
+            'toc' => $toc,
+            'postTags' => $post->tags,
+            'relatedPosts' => $relatedPosts,
+            'breadcrumbs' => $breadcrumbs,
+        ]);
     }
 }

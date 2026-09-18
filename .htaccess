@@ -1,0 +1,32 @@
+# ---------------------------------------------------------------------------
+#  Root .htaccess — XAMPP / shared hosting
+#  Sends every request to the Laravel front controller inside public/.
+#  (If your Apache document root already points at public/, this file is
+#   never used — the rules there handle everything.)
+# ---------------------------------------------------------------------------
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Never rewrite requests that already target public/ (avoids loops)
+    RewriteCond %{REQUEST_URI} !^/?public/
+
+    # Keep real files/folders inside the root reachable for the rewrite below
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+# Block web access to sensitive files if the project root is exposed
+<FilesMatch "(^\.env|^\.env\..*|^composer\.(json|lock)$|^artisan$|\.(sqlite|sqlite-wal|sqlite-shm|log|key)$)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# No directory listings
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>

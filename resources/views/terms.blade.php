@@ -1,0 +1,31 @@
+@extends('layouts.app')
+
+@section('title', __('site.terms_title').' | '.site_name())
+@section('meta_description', __('site.terms_title').' — '.site_name())
+@section('robots', 'index, follow')
+
+@section('content')
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  @include('partials.breadcrumbs')
+
+  <article class="prose dark:prose-invert max-w-none">
+    <h1>{{ __('site.terms_title') }}</h1>
+    <p class="text-sm text-slate-500 font-mono">Last Updated: September 17, 2026</p>
+
+    <h2>1. Acceptance of Terms</h2>
+    <p>By accessing and utilizing <strong>{{ parse_url(config('app.url'), PHP_URL_HOST) ?: 'dheyadev.com' }}</strong>, you agree to comply with and be bound by these Terms of Service. If you do not agree, please do not use the website.</p>
+
+    <h2>2. Intellectual Property & Code Snippets</h2>
+    <p>All technical articles, original tutorials, project descriptions, and custom code snippets published on this site are authored by {{ setting('author_name') ?: 'Dheya Abbas' }} unless cited otherwise. Code snippets published in tutorials may be freely used for personal and educational projects.</p>
+
+    <h2>3. Disclaimer of Warranties</h2>
+    <p>All tutorials, architectural guides, and software code samples are provided on an "as-is" and "as-available" basis without any express or implied warranty. While every effort is made to ensure absolute accuracy and safety, the author is not liable for issues arising from their implementation.</p>
+
+    <h2>4. External Links</h2>
+    <p>This website may contain links to external third-party sites (e.g., GitHub, documentation sources, social media). We assume no responsibility for the content, privacy practices, or accuracy of any third-party websites.</p>
+
+    <h2>5. Modifications</h2>
+    <p>We reserve the right to revise these Terms of Service at any time. Changes will be reflected directly on this page.</p>
+  </article>
+</div>
+@endsection

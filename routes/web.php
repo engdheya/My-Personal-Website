@@ -26,8 +26,13 @@ Route::post('/contact', [ContactController::class, 'submit'])->name('contact.sub
 
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
-Route::view('/privacy-policy', 'privacy')->name('privacy');
-Route::view('/terms', 'terms')->name('terms');
+Route::view('/privacy-policy', 'privacy', [
+    'breadcrumbs' => [['name' => __('site.privacy_title'), 'url' => '/privacy-policy']],
+])->name('privacy');
+
+Route::view('/terms', 'terms', [
+    'breadcrumbs' => [['name' => __('site.terms_title'), 'url' => '/terms']],
+])->name('terms');
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
