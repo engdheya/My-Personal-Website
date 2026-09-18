@@ -10,22 +10,47 @@ class SearchController extends Controller
 {
     public function index(Request $request)
     {
-        $query = $request->input('q', '');
-        $posts = [];
-        $projects = [];
+        $query = trim((string) $request->query('q', ''));
 
-        if ($query) {
-            $posts = Post::published()
-                ->where(function ($q) use ($query) {
-                    $q->where('title', 'like', "%{$query}%")
-                      ->orWhere('content', 'like', "%{$query}%");
-                })->take(20)->get();
+        $matchingPosts = collect();
+        $matchingProjects = collect();
 
-            $projects = Project::where('title', 'like', "%{$query}%")
-                ->orWhere('technologies', 'like', "%{$query}%")
-                ->take(10)->get();
+        if ($query !== '') {
+            $term = '%'.$query.'%';
+
+            $matchingPosts = Post::published()
+                ->with('category')
+                ->where(function ($builder) use ($term) {
+                    $builder->where('title', 'like', $term)
+                        ->orWhere('title_ar', 'like', $term)
+                        ->orWhere('content', 'like', $term)
+                        ->orWhere('content_ar', 'like', $term);
+                })
+                ->latest('published_at')
+                ->take(20)
+                ->get();
+
+            $matchingProjects = Project::query()
+                ->where(function ($builder) use ($term) {
+                    $builder->where('title', 'like', $term)
+                        ->orWhere('title_ar', 'like', $term)
+                        ->orWhere('description', 'like', $term)
+                        ->orWhere('technologies', 'like', $term);
+                })
+                ->latest('id')
+                ->take(10)
+                ->get();
         }
 
-        return view('search', compact('query', 'posts', 'projects'));
+        $breadcrumbs = [
+            ['name' => __('site.search_title'), 'url' => '/search'],
+        ];
+
+        return view('search', [
+            'query' => $query,
+            'matchingPosts' => $matchingPosts,
+            'matchingProjects' => $matchingProjects,
+            'breadcrumbs' => $breadcrumbs,
+        ]);
     }
 }

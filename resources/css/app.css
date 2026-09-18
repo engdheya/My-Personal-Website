@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------
+   Sources scanned when compiling the stylesheet (Tailwind v4).
+   Makes the build deterministic regardless of the working directory:
+     npm run build:css
+   ------------------------------------------------------------------ */
+@source "../../resources/views/**/*.blade.php";
+@source "../../app/**/*.php";
+@source "../../src/views/**/*.ejs";
+
 @layer base {
   :root {
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

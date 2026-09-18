@@ -1,0 +1,99 @@
+@extends('layouts.app')
+
+@section('title', __('site.search_title').': '.$query.' | '.site_name())
+@section('meta_description', __('site.search_no_results'))
+@section('robots', 'noindex, nofollow')
+
+@section('content')
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  @include('partials.breadcrumbs')
+
+  <!-- Search Bar Header -->
+  <div class="mb-10">
+    <h1 class="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4">
+      {{ __('site.search_title') }}
+    </h1>
+
+    <form action="{{ url('search') }}" method="GET" class="relative max-w-2xl">
+      @if (app()->getLocale() === 'en')
+        <input type="hidden" name="lang" value="en">
+      @endif
+      <input
+        type="text"
+        name="q"
+        value="{{ $query }}"
+        placeholder="{{ __('site.search_placeholder') }}"
+        class="w-full px-5 py-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm"
+        required
+      >
+      <button type="submit" class="absolute end-3 top-3 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors">
+        {{ __('site.search_title') }}
+      </button>
+    </form>
+  </div>
+
+  @if ($query !== '')
+    <div class="mb-8 text-sm text-slate-500 font-mono">
+      {{ __('site.search_query_prefix') }} <span class="font-bold text-slate-900 dark:text-white">"{{ $query }}"</span>:
+      {{ $matchingPosts->count() }} {{ __('site.search_found_articles') }}, {{ $matchingProjects->count() }} {{ __('site.search_found_projects') }}
+    </div>
+  @endif
+
+  <!-- Results: Articles -->
+  @if ($matchingPosts->isNotEmpty())
+    <section class="mb-12">
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+        <span>📝</span>
+        <span>{{ __('site.search_found_articles') }}</span>
+      </h2>
+      <div class="space-y-4">
+        @foreach ($matchingPosts as $post)
+          <article class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-500 transition-colors">
+            <span class="text-xs font-mono text-blue-600 dark:text-blue-400 font-bold">{{ loc_field($post->category, 'name') }}</span>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1">
+              <a href="{{ url('blog/'.$post->slug).lang_q() }}" class="hover:underline">
+                {{ loc_field($post, 'title') }}
+              </a>
+            </h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-2 line-clamp-2">
+              {{ loc_field($post, 'excerpt') }}
+            </p>
+          </article>
+        @endforeach
+      </div>
+    </section>
+  @endif
+
+  <!-- Results: Projects -->
+  @if ($matchingProjects->isNotEmpty())
+    <section class="mb-12">
+      <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+        <span>🚀</span>
+        <span>{{ __('site.search_found_projects') }}</span>
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        @foreach ($matchingProjects as $project)
+          <article class="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-blue-500 transition-colors">
+            <span class="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold">{{ $project->category }}</span>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mt-1">
+              <a href="{{ url('projects/'.$project->slug).lang_q() }}" class="hover:underline">
+                {{ loc_field($project, 'title') }}
+              </a>
+            </h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mt-2 line-clamp-2">
+              {{ loc_field($project, 'short_description') }}
+            </p>
+          </article>
+        @endforeach
+      </div>
+    </section>
+  @endif
+
+  @if ($query !== '' && $matchingPosts->isEmpty() && $matchingProjects->isEmpty())
+    <div class="p-12 text-center rounded-3xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+      <p class="text-slate-500">{{ __('site.search_no_results') }}</p>
+    </div>
+  @endif
+
+</div>
+@endsection

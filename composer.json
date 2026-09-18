@@ -2,14 +2,22 @@
     "name": "engdheya/dheyadev",
     "type": "project",
     "description": "Personal Website, Technical Blog, and Portfolio for Dheya Abbas (Software Engineer & Developer)",
-    "keywords": ["laravel", "filament", "portfolio", "blog", "developer", "dheyadev"],
+    "keywords": [
+        "laravel",
+        "filament",
+        "portfolio",
+        "blog",
+        "developer",
+        "dheyadev"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
         "filament/filament": "^3.2",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "league/commonmark": "^2.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -24,7 +32,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Support/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -34,8 +45,7 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi",
-            "@php artisan filament:upgrade"
+            "@php artisan package:discover --ansi"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
@@ -45,6 +55,14 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "xampp": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
+            "@php artisan key:generate --ansi",
+            "@php artisan optimize:clear",
+            "@php artisan migrate --seed --force",
+            "@php artisan storage:link",
+            "@php artisan xampp:check"
         ]
     },
     "extra": {
@@ -56,6 +74,9 @@
         "optimize-autoloader": true,
         "preferred-install": "dist",
         "sort-packages": true,
+        "platform": {
+            "php": "8.2.12"
+        },
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true

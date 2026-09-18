@@ -76,23 +76,115 @@ npm start
 ```
 سيعمل الموقع مباشرة على الرابط: `http://localhost:8000` أو المعاينة السحابية المرفوعة.
 
-### 2. تشغيل المشروع عبر بيئة Laravel & PHP:
-```bash
-# تثبيت حزم الملحن Composer
+### 2. تشغيل المشروع عبر بيئة Laravel & PHP (متوافق مع PHP 8.2.12 على XAMPP):
+```bat
+copy .env.example .env
 composer install
-
-# إنشاء مفتاح التطبيق
 php artisan key:generate
-
-# تشغيل التهجير وتعبئة البيانات الأولية
+php artisan xampp:create-database   :: أو تجاهلها عند استخدام SQLite
 php artisan migrate --seed
-
-# ربط التخزين العام للملفات المرفوعة
 php artisan storage:link
-
-# تشغيل خادم التطوير
-php artisan serve
+php artisan xampp:check             :: فحص البيئة والامتدادات وقاعدة البيانات
+php artisan serve                   :: أو افتح المشروع عبر Apache: http://localhost/dheyadev/public
 ```
+> 📖 الشرح الكامل خطوة بخطوة مع حل المشاكل الشائعة موجود في قسم **«التشغيل على XAMPP مع PHP 8.2.12»** أدناه، ويمكنك استخدام ملف `setup-xampp.bat` للتنصيب التلقائي.
+
+---
+
+---
+
+## 🪟 التشغيل على XAMPP مع PHP 8.2.12 / Running on XAMPP
+
+> **تمت مراجعة المشروع بالكامل ليعمل على PHP 8.2 تحديداً**: صياغة جميع ملفات PHP و Blade تم فحصها بمحلل PHP 8.2 (77 ملف PHP + 22 قالب Blade) ولا يوجد أي استخدام لميزة من PHP 8.3/8.4. كما تم تثبيت إصدار الحزم على نسختك عبر `config.platform.php = 8.2.12` في `composer.json` حتى لا يقوم Composer بتنزيل أي حزمة تطلب PHP أحدث.
+
+### 1) المتطلبات / Requirements
+- **XAMPP** مع PHP **8.2.x** (8.2.12 حسب نسختك).
+- **Composer** (لتحميل حزم Laravel و Filament).
+- إضافات PHP المطلوبة (كلها مفعّلة افتراضياً في XAMPP): `mbstring`, `openssl`, `fileinfo`, `tokenizer`, `xml`, `session`, `pdo_mysql`.
+  - لمستخدمي SQLite يجب تفعيل `extension=pdo_sqlite` داخل `xampp/php/php.ini` ثم إعادة تشغيل Apache.
+
+### 2) التنصيب السريع / Quick install
+```bat
+cd C:\xampp\htdocs\dheyadev
+copy .env.example .env
+composer install
+php artisan key:generate
+php artisan xampp:create-database    :: ينشئ قاعدة MySQL من إعدادات .env (تجاهلها مع SQLite)
+php artisan migrate --seed           :: ينشئ الجداول ويضيف المحتوى الكامل (مقالات، مشاريع، خدمات...)
+php artisan storage:link
+php artisan xampp:check              :: فحص شامل للبيئة والامتدادات وقاعدة البيانات
+```
+أو ببساطة انقر مرتين على ملف **`setup-xampp.bat`** (أو استخدم `composer xampp`) الذي ينفذ الخطوات السابقة نيابة عنك.
+
+### 3) تشغيل الموقع / Serving the site
+اختر واحدة من الطرق التالية بحسب راحتك، ثم عدّل `APP_URL` في `.env` ليطابق الرابط (بدون `/` في النهاية) ونفّذ `php artisan config:clear`:
+
+**أ) الرابط المباشر (أسهل طريقة):**
+```
+http://localhost/dheyadev/public
+```
+
+**ب) رابط قصير بدون `/public` (Virtual Host):** أضف في `C:\xampp\apache\conf\extra\httpd-vhosts.conf`:
+```apache
+<VirtualHost *:80>
+    DocumentRoot "C:/xampp/htdocs/dheyadev/public"
+    ServerName dheyadev.local
+    <Directory "C:/xampp/htdocs/dheyadev/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+ثم أضف `127.0.0.1  dheyadev.local` إلى `C:\Windows\System32\drivers\etc\hosts` وأعد تشغيل Apache.
+(يمكنك أيضاً تغيير `DocumentRoot` لمجلد `public` مباشرة في `httpd.conf`.)
+
+**ج) خادم PHP المدمج (بدون Apache):**
+```bat
+php artisan serve
+:: ثم افتح http://127.0.0.1:8000
+```
+
+> ⚠️ لا تضع المشروع كاملاً داخل `htdocs` وتفتح جذره مباشرة؛ المشروع يحتوي ملف `.htaccess` جذري يحوّل الطلبات إلى `public/` ويمنع الوصول إلى `.env`، لكن الطريقة الآمنة تبقى توجيه الـ Document Root إلى مجلد `public`.
+
+### 4) قاعدة البيانات / Database
+| الخيار | متى تستخدمه | الخطوات |
+|---|---|---|
+| **MySQL (الافتراضي)** | مع XAMPP، لأن `pdo_mysql` مفعّلة دائماً | `php artisan xampp:create-database` ثم `php artisan migrate --seed` |
+| **SQLite** | لا يوجد سيرفر قاعدة بيانات، وقاعدة جاهزة بالمحتوى موجودة بالمستودع | فعّل `extension=pdo_sqlite` في `php.ini`، ثم اجعل `DB_CONNECTION=sqlite` و`DB_DATABASE=database/database.sqlite` في `.env`، ثم `php artisan migrate --seed` |
+
+بيانات الاتصال الافتراضية في `.env.example` هي: `DB_HOST=127.0.0.1`، `DB_PORT=3306`، `DB_DATABASE=dheyadev`، `DB_USERNAME=root`، `DB_PASSWORD=` (بدون كلمة مرور، وهو الافتراضي في XAMPP).
+
+### 5) لوحة التحكم / Admin CMS
+- الرابط: `http://localhost/dheyadev/public/admin`
+- البريد: `admin@dheyadev.com` — كلمة المرور: `password`
+- لتغييرها: عدّل `ADMIN_EMAIL` و `ADMIN_PASSWORD` في `.env` ثم `php artisan db:seed --class=AdminUserSeeder`.
+
+### 6) حل المشاكل الشائعة / Troubleshooting
+| المشكلة | السبب | الحل |
+|---|---|---|
+| `could not find driver` | إضافة `pdo_mysql` غير مفعّلة | افتح `xampp/php/php.ini` وأزل `;` من أمام `extension=pdo_mysql` ثم أعد تشغيل Apache |
+| `No application encryption key has been specified` | `APP_KEY` فارغ | `php artisan key:generate` |
+| `SQLSTATE[HY000] [1049] Unknown database 'dheyadev'` | لم تُنشأ القاعدة | `php artisan xampp:create-database` ثم `php artisan migrate --seed` |
+| صفحة بيضاء أو `500` مع رسالة صلاحيات | مجلدات التخزين غير قابلة للكتابة | `php artisan xampp:check` ثم تأكد من إزالة "للقراءة فقط" عن `storage` و`bootstrap/cache` |
+| تنسيقات الصفحة مفقودة (CSS) | لم يُبنَ ملف التنسيقات | `npm install` ثم `npm run build:css` (أو استخدم النسخة المبنية الموجودة في `public/css/app.css`) |
+| `Class "..." not found` بعد إضافة ملفات | ذاكرة Composer | `composer dump-autoload` ثم `php artisan optimize:clear` |
+| `Vite manifest not found` | لا يستخدم المشروع Vite | الملفات تُقرأ من `public/css/app.css` مباشرة، نفّذ `php artisan optimize:clear` |
+| الروابط أو الصور لا تظهر بشكل صحيح | `APP_URL` لا يطابق الرابط الفعلي | صحّح `APP_URL` في `.env` ثم `php artisan config:clear` |
+| المنفذ 80 مشغول | خدمة أخرى تستخدم المنفذ | في XAMPP: Config ➜ httpd.conf ➜ غيّر `Listen 80` إلى `Listen 8080` |
+
+### 7) ماذا تغيّر في هذه المراجعة؟ / What changed for PHP 8.2.12
+- **لا تغييرات معطِّلة**: الكود الأصلي لم يستخدم أي ميزة من PHP 8.3/8.4، والتحقق الآلي أثبت أن 77/77 ملف PHP صالح على PHP 8.2.
+- `composer.json`: تثبيت `config.platform.php = 8.2.12` + إضافة `app/Support/helpers.php` إلى `autoload.files` + سكربت `composer xampp` للتنصيب بخطوة واحدة.
+- **إكمال البنية المفقودة** التي كانت تمنع تشغيل نسخة Laravel على XAMPP أصلاً:
+  - مزوّدو الخدمات: `bootstrap/providers.php` + `app/Providers/AppServiceProvider.php` + `app/Providers/Filament/AdminPanelProvider.php` (لوحة Filament v3 على `/admin`).
+  - `app/Http/Middleware/SetLocale.php` لدعم اللغتين (`?lang=en` مع حفظ الاختيار في الكوكيز/الجلسة).
+  - `routes/console.php` + أمرين جديدين: `php artisan xampp:check` و`php artisan xampp:create-database`.
+  - واجهات API: `app/Http/Controllers/Api/PostApiController.php` و `ProjectApiController.php`.
+  - **قوالب Blade كاملة** (22 قالباً) للصفحات: الرئيسية، عن المطور، المدونة وقائمة المقالات، المشاريع وتفاصيلها، الخدمات، التواصل، البحث، السياسات، صفحات الأخطاء (404/403/500) وخريطة الموقع.
+  - محرّك Markdown عربي/إنجليزي عبر `league/commonmark` (مرفق مع Laravel 11) يولّد نفس مخرجات الواجهة السابقة: فهرس محتويات تلقائي، ترقيم أكواد، وزر نسخ.
+  - `storage/` و`bootstrap/cache/` وملفات `.gitignore` الخاصة بها + `public/.htaccess` + `.htaccess` جذري.
+  - قواعد بذر كاملة (`DatabaseSeeder` + `AdminUserSeeder` + `SettingsSeeder` + `ContentSeeder`) بنفس محتوى قاعدة SQLite المرفقة تماماً.
+  - ملفات الترجمة `lang/ar/site.php` و`lang/en/site.php` منقولة حرفياً من محرّك المعاينة.
 
 ---
 
@@ -100,10 +192,14 @@ php artisan serve
 
 ```
 ├── app/
+│   ├── Console/Commands/         # أوامر XAMPP: xampp:check و xampp:create-database
 │   ├── Filament/Resources/       # تعريفات لوحة تحكم Filament v3 للمقالات والمشاريع والخدمات
-│   ├── Http/Controllers/        # وحدات التحكم (Home, Post, Project, Service, Contact, Search, Sitemap)
+│   ├── Http/Controllers/         # وحدات التحكم (Home, Post, Project, Service, Contact, Search, Sitemap)
+│   │   ├── Api/                  # واجهات REST للقراءة فقط (مقالات ومشاريع)
+│   │   └── Middleware/           # SetLocale لدعم اللغتين عبر ?lang=en
 │   ├── Models/                   # نماذج Eloquent (User, Post, Category, Tag, Project, Service, Message, Setting)
-│   └── Policies/                 # سياسات الصلاحيات والحماية
+│   ├── Providers/                # AppServiceProvider + Filament/AdminPanelProvider (لوحة /admin)
+│   └── Support/                  # helpers.php (وسوم Blade المساعدة) + محرّك Markdown
 ├── bootstrap/app.php             # تهيئة Laravel 11
 ├── config/                       # ملفات الإعدادات (app, database, filament, mail)
 ├── database/
@@ -111,9 +207,10 @@ php artisan serve
 │   ├── migrations/               # ملفات التهجير لجميع الجداول التسعة
 │   └── seeders/                  # البيانات الأولية الواقعية لمشاريع ومقالات ضياء عباس
 ├── public/                       # الأصول العامة (CSS, JavaScript, Images, Favicon, Robots.txt)
+├── lang/                         # ملفات الترجمة ar/en (نفس نصوص محرّك المعاينة)
 ├── resources/
-│   ├── css/app.css               # ملف مدخلات Tailwind CSS
-│   └── views/                    # قوالب العرض (Blade و EJS للمعاينة المتطابقة)
+│   ├── css/app.css               # ملف مدخلات Tailwind CSS (يحدد مصادر القوالب عبر @source)
+│   └── views/                    # قوالب Blade كاملة (layouts, partials, blog, projects, errors...) + EJS للمعاينة
 ├── routes/
 │   ├── web.php                   # مسارات الويب العامة
 │   └── api.php                   # مسارات واجهات REST API
@@ -122,7 +219,9 @@ php artisan serve
 │   ├── db.js                     # محرك SQLite فائق السرعة
 │   └── helpers.js                # معالجة الماركداون والـ TOC والـ SEO والـ Schemas
 ├── artisan                       # واجهة سطر أوامر لارافيل
-├── composer.json                 # حزم PHP ولارافيل
+├── composer.json                 # حزم PHP ولارافيل (مثبّتة على PHP 8.2.12)
+├── setup-xampp.bat               # تنصيب تلقائي على ويندوز + XAMPP
+├── storage/                      # تخزين لارافيل (cache, sessions, views, logs)
 └── package.json                  # حزم Node و Tailwind CLI
 ```
 

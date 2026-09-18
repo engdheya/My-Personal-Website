@@ -10,14 +10,17 @@ if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php'))
 }
 
 // Register the Composer autoloader...
-if (file_exists(__DIR__.'/../vendor/autoload.php')) {
-    require __DIR__.'/../vendor/autoload.php';
+if (! file_exists(__DIR__.'/../vendor/autoload.php')) {
+    http_response_code(500);
+
+    exit(
+        'Composer dependencies are missing. Open a terminal in the project folder and run "composer install", '
+        .'then reload this page. See README.md (section: التشغيل على XAMPP) for the full setup steps.'
+    );
 }
 
+require __DIR__.'/../vendor/autoload.php';
+
 // Bootstrap Laravel and handle the request...
-if (file_exists(__DIR__.'/../bootstrap/app.php')) {
-    (require_once __DIR__.'/../bootstrap/app.php')
-        ->handleRequest(Request::capture());
-} else {
-    echo "DheyaDev Platform initialized. Ready for Composer bootstrap.";
-}
+(require_once __DIR__.'/../bootstrap/app.php')
+    ->handleRequest(Request::capture());

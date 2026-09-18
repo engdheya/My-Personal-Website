@@ -58,4 +58,25 @@ class Post extends Model
         return $query->where('status', 'published')
                      ->where('published_at', '<=', now());
     }
+
+    /**
+     * Is this article live (published and not scheduled in the future)?
+     */
+    public function isPublished(): bool
+    {
+        return $this->status === 'published'
+            && $this->published_at !== null
+            && $this->published_at->lessThanOrEqualTo(now());
+    }
+
+    /**
+     * Estimated reading time in minutes (Arabic and English aware).
+     */
+    public function readingTime(): int
+    {
+        $content = post_body($this);
+        $words = max(1, count(preg_split('/\s+/u', trim(strip_tags($content)), -1, PREG_SPLIT_NO_EMPTY)));
+
+        return max(1, (int) ceil($words / 200));
+    }
 }
